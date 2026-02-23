@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>वादावली - Vadavali by Sri Jayatirtha (Dvaita Vedanta)</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕉️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/bs.css?v=20260222-newlines">
+</head>
+<body>
+    <header id="mainHeader" class="header-expanded">
+        <button class="header-toggle-btn" id="headerToggleBtn" title="Toggle header">▲</button>
+        <div class="header-logo">
+            <img src="images/vedavyasa-madhva.jpg" alt="Vedavyasa and Madhvacharya" id="logoImg" title="Go to Home" />
+        </div>
+        <div class="language-selector-top">
+            <div class="language-dropdown">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="sa">संस्कृतम् (Sanskrit)</option>
+                    <option value="en">English (IAST)</option>
+                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>                <option value="ml">മലയാളം (Malayalam)</option>
+                    <option value="gu">ગુજરાતી (Gujarati)</option>
+                    <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                    <option value="bn">বাংলা (Bengali)</option>            </select>
+            </div>
+            
+            <div class="vyakhyana-selector" id="vyakhyanaSelector" style="display: none;">
+                <label for="vyakhyanaDropdown">Vyakhyana:</label>
+                <div class="dropdown-checkbox">
+                    <button class="dropdown-btn" id="vyakhyanaDropdownBtn">
+                        <span id="vyakhyanaSelectedText">All Vyakhyanas</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content" id="vyakhyanaDropdownContent">
+                        <label for="vyakhyana-checkbox-1"><input type="checkbox" id="vyakhyana-checkbox-1" value="1" checked> व्याख्यान १</label>
+                        <label for="vyakhyana-checkbox-2"><input type="checkbox" id="vyakhyana-checkbox-2" value="2" checked> व्याख्यान २</label>
+                        <label for="vyakhyana-checkbox-3"><input type="checkbox" id="vyakhyana-checkbox-3" value="3" checked> व्याख्यान ३</label>
+                        <label for="vyakhyana-checkbox-4"><input type="checkbox" id="vyakhyana-checkbox-4" value="4" checked> व्याख्यान ४</label>
+                        <label for="vyakhyana-checkbox-5"><input type="checkbox" id="vyakhyana-checkbox-5" value="5" checked> व्याख्यान ५</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vyakhyana-font-control" id="vyakhyanaFontControl" style="display: none;">
+                <div class="font-control-row">
+                    <span style="font-weight: 500; margin-right: 10px;">Vyakhyana Font:</span>
+                    <div class="font-size-buttons">
+                        <button id="decreaseVyakhyanaFontBtn" class="font-size-btn" title="Decrease vyakhyana font size">A-</button>
+                        <button id="resetVyakhyanaFontBtn" class="font-size-btn" title="Reset vyakhyana font size">A</button>
+                        <button id="increaseVyakhyanaFontBtn" class="font-size-btn" title="Increase vyakhyana font size">A+</button>
+                    </div>
+                </div>
+                <label class="auto-hide-global-checkbox" style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="autoHideCheckbox" style="cursor: pointer;">
+                    <span>Auto-hide headers</span>
+                </label>
+            </div>
+        </div>
+        <div class="header-content">
+            <h1>वादावली</h1>
+            <p class="subtitle">Vadavali by Sri Jayatirtha - A Treatise on Dvaita Vedanta</p>
+        </div>
+        <nav class="nav-controls">
+            <div class="adhyaya-selector" id="adhyayaSelector">
+                <label for="adhyaya">अध्यायः:</label>
+                <select id="adhyaya">
+                    <option value="1">प्रथमः (Samanvaya - Harmony)</option>
+                    <option value="2">द्वितीयः (Avirodha - Non-Conflict)</option>
+                    <option value="3">तृतीयः (Sadhana - Means)</option>
+                    <option value="4">चतुर्थः (Phala - Result)</option>
+                </select>
+            </div>
+            <div class="pada-selector" id="padaSelector">
+                <label for="pada">पादः:</label>
+                <select id="pada">
+                    <option value="1">प्रथमः</option>
+                    <option value="2">द्वितीयः</option>
+                    <option value="3">तृतीयः</option>
+                    <option value="4">चतुर्थः</option>
+                </select>
+            </div>
+            <div class="sutra-navigation-header" id="sutraNavigationHeader" style="display: none;">
+                <button class="nav-header-btn vyakhyana-nav-btn" id="prevVyakhyanaBtn" title="Previous Vyakhyana">&lt;&lt;</button>
+                <button class="nav-header-btn part-nav-btn" id="prevPartBtn" title="Previous Part">&lt;</button>
+                <button class="nav-header-btn part-nav-btn" id="nextPartBtn" title="Next Part">&gt;</button>
+                <button class="nav-header-btn vyakhyana-nav-btn" id="nextVyakhyanaBtn" title="Next Topic">&gt;&gt;</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search verses...">
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="info-panel" id="infoPanel">
+                <button class="panel-toggle-btn" id="panelToggleBtn" title="Toggle panel">«</button>
+                <div class="info-panel-content" id="infoPanelContent">
+                    <h2>वादावली</h2>
+                    <p class="info-text">
+                        Vadavali (वादावली) is a seminal philosophical text composed by <strong>Sri Jayatirtha</strong>
+                        (also known as Teeka Acharya), presenting the core principles of
+                        <strong>Dvaita (Dualistic) Vedanta</strong> philosophy.
+                    </p>
+                    <div class="philosophy-box">
+                        <h3>द्वैत वेदान्त सिद्धान्ताः</h3>
+                        <ul>
+                            <li><strong>पञ्चभेद:</strong> Five-fold eternal difference</li>
+                            <li><strong>स्वतन्त्र-परतन्त्र:</strong> Independent Brahman, dependent jīva</li>
+                            <li><strong>विष्णु-सर्वोत्तमता:</strong> Supremacy of Vishnu</li>
+                            <li><strong>तत्त्ववाद:</strong> Realism - differences are real</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="section-heading" id="sectionHeading">
+                    <span id="sectionTitle"></span>
+                    <div class="heading-controls">
+                        <span class="collapse-icon" id="collapseIcon">▼</span>
+                    </div>
+                </div>
+                <div class="sutra-list" id="sutraList">
+                    <!-- Topics will be loaded here dynamically -->
+                </div>
+                
+                <div class="sutra-detail" id="sutraDetail" style="display: none;">
+                    <div id="detailContent">
+                        <!-- Detailed topic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <a href="admin.html" class="admin-link" title="Admin Panel">🔐 Admin</a>
+        </div>
+        <p>वादावली by Sri Jayatirtha with commentaries by Raghavendra Tirtha and Srinivasa Tirtha | For educational purposes</p>
+        <div class="footer-info">
+            <a href="RELEASE_NOTES.md" target="_blank" class="release-notes-link">Release Notes</a>
+            <p class="last-updated" id="lastUpdated">Updated on: <span id="updateDate">Loading...</span></p>
+        </div>
+    </footer>
+
+    <!-- Sanskrit Search Module -->
+    <script src="sanskrit-search-library/sandhi-rules.js"></script>
+    <script src="sanskrit-search-library/sanskrit-search.js"></script>
+    <script src="sanskrit-search-library/pratika.js"></script>
+    
+    <!-- Performance utilities -->
+    <script src="js/performance-utils.js"></script>
+    <script src="js/virtual-scroller.js"></script>
+    
+    <!-- Transliteration engine from local library -->
+    <script src="transliterate-library/transliterate.js"></script>
+    
+    <!-- Language-specific script mappings from local library -->
+    <script src="transliterate-library/scripts/english-script.js"></script>
+    <script src="transliterate-library/scripts/kannada-script.js"></script>
+    <script src="transliterate-library/scripts/telugu-script.js"></script>
+    <script src="transliterate-library/scripts/tamil-script.js"></script>
+    <script src="transliterate-library/scripts/malayalam-script.js"></script>
+    <script src="transliterate-library/scripts/gujarati-script.js"></script>
+    <script src="transliterate-library/scripts/odia-script.js"></script>
+    <script src="transliterate-library/scripts/bengali-script.js"></script>
+    
+    <!-- Main application -->
+    <script src="js/bs.js?v=20260222-remove-adhikarana"></script>
+</body>
+</html>

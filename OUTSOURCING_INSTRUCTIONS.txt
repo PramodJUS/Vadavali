@@ -1,0 +1,166 @@
+================================================================================
+                    VADAVALI DATA ENTRY - OUTSOURCING PACKAGE
+================================================================================
+
+Everything is ready for non-technical data entry!
+
+FILES CREATED:
+--------------
+1. grantha-details.xlsx         - Excel file with current data (READY TO USE!)
+2. json_to_excel.py             - Export script (JSON → Excel)
+3. excel_to_json.py             - Import script (Excel → JSON)
+4. export-to-excel.bat          - Windows: Double-click to export
+5. import-from-excel.bat        - Windows: Double-click to import
+6. DATA_ENTRY_GUIDE.md          - Complete instructions for data entry
+7. requirements.txt             - Python dependencies
+
+================================================================================
+FOR YOUR DATA ENTRY TEAM:
+================================================================================
+
+SEND THEM:
+----------
+✓ grantha-details.xlsx
+✓ DATA_ENTRY_GUIDE.md
+✓ (Optional) Access to Google Sheets version
+
+INSTRUCTIONS FOR THEM:
+----------------------
+1. Open grantha-details.xlsx
+2. Read "📖 Instructions" sheet
+3. Fill data in "Vadavali Data" sheet
+4. Use Alt+Enter for line breaks
+5. Save and send back to you
+
+================================================================================
+WHEN YOU RECEIVE THE FILLED EXCEL FILE:
+================================================================================
+
+OPTION 1 - Windows (Easiest):
+------------------------------
+1. Replace grantha-details.xlsx with the filled file
+2. Double-click "import-from-excel.bat"
+3. Review grantha-details-new.json
+4. If OK, rename to grantha-details.json
+
+OPTION 2 - Command Line:
+-------------------------
+1. python excel_to_json.py
+2. Check for errors
+3. Review the output
+4. Replace original JSON file
+
+================================================================================
+USING GOOGLE SHEETS (RECOMMENDED FOR TEAMS):
+================================================================================
+
+1. Upload grantha-details.xlsx to Google Drive
+2. Open with Google Sheets
+3. Share with data entry team ("Can edit")
+4. Multiple people can work simultaneously
+5. Download as Excel (.xlsx) when done
+6. Convert back to JSON using import-from-excel.bat
+
+BENEFITS:
+---------
+✓ No software installation needed
+✓ Real-time collaboration
+✓ Auto-save
+✓ Version history
+✓ Access from anywhere
+
+================================================================================
+SETUP (ONE-TIME):
+================================================================================
+
+Install Python (if not already installed):
+1. Download: https://www.python.org/downloads/
+2. Install with "Add to PATH" checked
+3. Open Command Prompt
+4. Run: pip install -r requirements.txt
+
+================================================================================
+DATA STRUCTURE:
+================================================================================
+
+Each row contains:
+- Topic ID: 1, 2, 3, etc.
+- Part: Part#1, Part#2, etc.
+- वादावली: Source text
+- भावदीपा: Commentary 1
+- प्रकाशः: Commentary 2
+- विवर्णम्: Commentary 3
+
+================================================================================
+QUALITY CHECKS:
+================================================================================
+
+Before importing:
+□ All Topic IDs are filled
+□ Part format is correct (Part#1, Part#2)
+□ No accidental deletions
+□ Headers are unchanged
+□ File is saved as .xlsx
+
+After importing:
+□ Check grantha-details-new.json visually
+□ Test on website (refresh browser)
+□ Verify a few random topics
+□ Keep backup of original
+
+================================================================================
+TIPS FOR OUTSOURCING:
+================================================================================
+
+1. START SMALL
+   - Give 5-10 topics first as a test
+   - Check quality before proceeding
+
+2. CLEAR GUIDELINES
+   - Share DATA_ENTRY_GUIDE.md
+   - Provide examples of good entries
+   - Show correct line break format
+
+3. REGULAR REVIEWS
+   - Check submissions frequently
+   - Import and test every few topics
+   - Give feedback quickly
+
+4. TRACKING
+   - Add a "Status" column in Excel (won't affect JSON)
+   - Use values: "Pending", "Done", "Reviewed"
+
+5. BACKUP EVERYTHING
+   - Keep copies of all Excel files
+   - Backups are auto-created with timestamps
+   - Test before replacing production files
+
+================================================================================
+TROUBLESHOOTING:
+================================================================================
+
+Q: Script gives error "openpyxl not found"
+A: Run: pip install openpyxl
+
+Q: Excel file has corrupted data
+A: Use backup JSON file from Grantha/ folder
+
+Q: Line breaks don't work
+A: Remind team to use Alt+Enter (Windows) or Option+Enter (Mac)
+
+Q: Script shows warnings
+A: Read the warning message - usually Topic ID or Part format issue
+
+Q: Multiple people editing same topic
+A: Use Google Sheets with proper coordination
+
+================================================================================
+SUPPORT:
+================================================================================
+
+For technical issues, share:
+- Error message (screenshot)
+- Excel file
+- Python version (python --version)
+
+================================================================================

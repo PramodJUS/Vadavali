@@ -1,0 +1,40 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+venv/
+ENV/
+env/
+*.egg-info/
+
+# Excel working files (not needed in repo)
+*.xlsx
+*.xls
+
+# Backup and temporary JSON files
+*-backup-*.json
+*-new.json
+*.bak
+
+# Build artifacts
+build-timestamp.txt
