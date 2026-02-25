@@ -1377,6 +1377,16 @@ header.header-collapsed .header-toggle-btn {
     z-index: 1;
 }
 
+/* Commentary Images */
+.commentary-image {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+    display: block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Footer */
 footer {
     background: #2c3e50;

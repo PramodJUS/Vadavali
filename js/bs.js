@@ -2784,8 +2784,17 @@ function showTopicDetail(sutra, partKey = null) {
             const commentaries = [];
             let commentaryNum = 0;
 
-            // Define commentary order (वादावली first, then others alphabetically)
-            const commentaryOrder = ['वादावली', 'भावदीपा', 'प्रकाशः', 'विवर्णम्'];
+            // Define commentary order (वादावली first, then others alphabetically, then personal notes)
+            const commentaryOrder = [
+                'वादावली',
+                'भावदीपा',
+                'प्रकाशः',
+                'विवर्णम्',
+                'वैय्यक्तिकटिप्पणि',
+                'वैय्यक्तिकटिप्पणि - सम्स्क्रुत​ (AI Powered)',
+                'वैय्यक्तिकटिप्पणि - कन्नड (AI Powered)',
+                'वैय्यक्तिकटिप्पणि - आग्ला​ (AI Powered)'
+            ];
             const allKeys = Object.keys(partData).filter(k => typeof partData[k] === 'string');
 
             // Sort keys by defined order, then alphabetically for any extras

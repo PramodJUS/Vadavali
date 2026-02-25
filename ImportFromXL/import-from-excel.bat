@@ -3,15 +3,15 @@ echo ========================================
 echo  Vadavali Data Import from Excel
 echo ========================================
 echo.
-echo Converting Excel to grantha-details.json...
+echo Importing Excel data to grantha-details.json...
 echo.
 
-python excel_to_json.py
+python import_excel_to_json.py
 
 echo.
 echo ========================================
 echo.
-echo IMPORTANT: Review grantha-details-new.json before using!
+echo Import complete! Data merged into grantha-details.json
 echo.
 echo Press any key to close...
 pause >nul
