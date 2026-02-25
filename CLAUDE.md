@@ -34,15 +34,47 @@ The application uses a **simple JSON structure** for storing commentary text:
 
 ### Commentary System
 
-Commentaries are **dynamically detected** from the JSON keys in `grantha-details.json`. The order is defined in `js/bs.js` line ~2827:
+The application now includes **8 commentaries total**:
+- 4 traditional commentaries
+- 4 AI-powered personal notes (in Sanskrit, Kannada, and English)
+
+Commentaries are **dynamically detected** from the JSON keys in `grantha-details.json`. The order is defined in `js/bs.js` line ~2787-2797:
 ```javascript
-const commentaryOrder = ['वादावली', 'भावदीपा', 'प्रकाशः', 'विवर्णम्'];
+const commentaryOrder = [
+    'वादावली',
+    'भावदीपा',
+    'प्रकाशः',
+    'विवर्णम्',
+    'वैय्यक्तिकटिप्पणि',
+    'वैय्यक्तिकटिप्पणि - सम्स्क्रुत​ (AI Powered)',
+    'वैय्यक्तिकटिप्पणi - कन्नड (AI Powered)',
+    'वैय्यक्तिकटिप्पणi - आग्ला​ (AI Powered)'
+];
 ```
+
+**Note:** Some commentary keys contain Unicode zero-width characters (like \u200b) to maintain compatibility with existing data. These are handled transparently by the system.
 
 Author mappings from `Author.csv` provide:
 - Commentary display name
 - Author name for attribution
 - Optional author image (in `images/` folder)
+
+### Image Support in Commentaries
+
+Commentaries can include images using simple HTML `<img>` tags with the `.commentary-image` CSS class for consistent styling:
+
+```html
+<img src="images/jayateertha.jpg" class="commentary-image">
+```
+
+The CSS class (defined in `css/bs.css` lines 1380-1387) provides:
+- Max width: 200px
+- Automatic height scaling
+- Rounded corners (8px border-radius)
+- Drop shadow
+- Block display with 10px vertical margin
+
+Images should be placed in the `images/` folder and referenced with relative paths.
 
 ### Transliteration System
 
@@ -51,7 +83,7 @@ The app uses a **local transliteration library** (`transliterate-library/`) that
 - Kannada, Telugu, Tamil, Malayalam
 - Gujarati, Odia, Bengali
 
-**Both content AND commentary titles are transliterated** when language changes.
+**All 8 languages are fully supported** with corrected translations. Both content AND commentary titles are transliterated when language changes.
 
 ### Sanskrit Search
 
@@ -125,9 +157,26 @@ The app preserves UI state across navigation:
    }
    ```
 
-3. Optionally update `commentaryOrder` in `js/bs.js` line ~2827 to control display order
+3. Update `commentaryOrder` in `js/bs.js` line ~2787-2797 to control display order
+
+4. **Optional**: Add images to commentary using:
+   ```html
+   <img src="images/author-name.jpg" class="commentary-image">
+   ```
 
 The commentary will be automatically detected and displayed.
+
+### Translation System
+
+All UI text is stored in `js/bs.js` in the `translations` object (lines ~280-450). Each language has:
+- `title` - Page title
+- `searchPlaceholder` - Search box text
+- `infoText` - Information panel description
+- `loading` - Loading message
+- `noResults` - No results message
+- `footer` - Footer text
+
+**All 8 languages have been verified** to correctly reference "Vadavali by Jayatirtha" (not "Brahma Sutras by Madhvacharya").
 
 ### Null Checks for Removed Elements
 
@@ -141,6 +190,13 @@ if (!adhikaranaSelect) return;  // Element was removed from UI
 ### No Build System
 This is a **pure client-side application** - no build, compile, or bundling required. Just open `index.html` in a browser.
 
+### Local Development Server
+Use `start-server.bat` to run a local HTTP server on port 8080:
+```bash
+python -m http.server 8080
+```
+This avoids CORS issues when testing locally.
+
 ### Libraries Are Local
 Both `transliterate-library/` and `sanskrit-search-library/` are included locally, not via CDN.
 
@@ -151,6 +207,68 @@ The admin panel (`admin.html`) requires password authentication. Default passwor
 - Virtual scrolling for long topic lists
 - Debounced search (300ms delay)
 - Lazy loading of author images
+
+## Excel Import/Export Tools
+
+The `ImportFromXL/` folder contains Python scripts for data management:
+
+### Import from Excel
+```bash
+cd ImportFromXL
+python import_excel_to_json.py
+```
+Reads `grantha-details.xlsx` and imports all 8 commentary columns into `Grantha/grantha-details.json`. Automatically handles:
+- JSON string escaping (newlines, tabs, special characters)
+- Merging with existing data
+- Preserving Unicode characters in commentary keys
+
+**Commentary columns in Excel:**
+1. वादावली
+2. भावदीपा
+3. प्रकाशः
+4. विवर्णम्
+5. वैय्यक्तिकटिप्पणि
+6. वैय्यक्तिकटिप्पणि - सम्स्क्रुत​ (AI Powered)
+7. वैय्यक्तिकटिप्पणi - कन्नड (AI Powered)
+8. वैय्यक्तिकटिप्पणi - आग्ला​ (AI Powered)
+
+### Export to Excel
+```bash
+cd ImportFromXL
+python export_grantha_to_excel.py
+```
+Exports `Grantha/grantha-details.json` to Excel for easier editing.
+
+### Batch Files
+- `import-from-excel.bat` - Quick import
+- `export-to-excel.bat` - Quick export
+
+## Testing Folder
+
+The `testing/` folder contains all test files and one-time scripts:
+- `test.html` - Test HTML pages
+- `debug.html` - Debug interface
+- `*_check.txt` - Validation outputs
+- `*.py` - One-time migration scripts
+
+**Keep production code clean**: All test and temporary files go in `testing/`
+
+## Build Timestamp
+
+The `build-timestamp.txt` file in the root directory provides the "Updated on" date in the footer. Format:
+```
+February 25, 2026
+```
+
+**Important**: This file must be tracked in git (not in `.gitignore`) so it appears on GitHub Pages. The JavaScript in `js/bs.js` (lines 4089-4103) fetches this file and displays it in the footer.
+
+**Error Handling**: The code checks `response.ok` before reading the text to prevent 404 HTML from being displayed:
+```javascript
+const response = await fetch('build-timestamp.txt');
+if (!response.ok) {
+    throw new Error('File not found');
+}
+```
 
 ## Data Format Details
 
@@ -171,3 +289,46 @@ Links commentary names to authors and images.
 
 ### vishaya-details.json Structure
 Contains adhikarana (topic) metadata and detailed descriptions.
+
+## Common Issues and Solutions
+
+### GitHub Pages Showing 404 HTML in Footer
+**Problem**: The footer "Updated on" field displays GitHub's 404 page HTML as text.
+
+**Cause**: The `build-timestamp.txt` file is missing or in `.gitignore`, causing fetch to return 404 HTML.
+
+**Solution**:
+1. Ensure `build-timestamp.txt` exists in root directory
+2. Remove from `.gitignore` if present
+3. Add proper error handling in JavaScript (check `response.ok` before reading)
+4. Commit and push the file to GitHub
+
+### Commentary Not Appearing Despite Being in JSON
+**Problem**: Commentary is in `grantha-details.json` but doesn't show in UI.
+
+**Possible causes**:
+1. **Missing from Author.csv** - Add entry with exact matching key
+2. **Unicode characters in key** - Some keys contain invisible Unicode characters (e.g., \u200b). Copy the exact key from working data.
+3. **Not in commentaryOrder array** - Add to `commentaryOrder` in `js/bs.js`
+4. **HTML content breaking rendering** - If commentary contains full HTML documents (<!DOCTYPE html>...), it will break rendering. Use plain text or simple HTML fragments only.
+
+### Translation Showing Wrong Text
+**Problem**: Language selector shows incorrect text (e.g., "Brahma Sutras" instead of "Vadavali").
+
+**Solution**: Update the `translations` object in `js/bs.js` (lines ~280-450) for the affected language code (sa, kn, te, ta, ml, gu, or, bn, en).
+
+### CORS Errors on Local Development
+**Problem**: Opening `index.html` directly causes CORS errors.
+
+**Solution**: Use `start-server.bat` to run local HTTP server on port 8080.
+
+### Cache Not Clearing After Updates
+**Problem**: Changes to `js/bs.js` or `css/bs.css` not visible after deployment.
+
+**Solution**:
+1. Update cache-busting version in `index.html`:
+   ```html
+   <script src="js/bs.js?v=YYYYMMDD-description"></script>
+   ```
+2. Wait 1-2 minutes for GitHub Pages to rebuild
+3. Hard refresh browser (Ctrl+Shift+R or Cmd+Shift+R)
