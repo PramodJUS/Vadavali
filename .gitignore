@@ -37,4 +37,4 @@ env/
 *.bak
 
 # Build artifacts
-build-timestamp.txt
+# (build-timestamp.txt is now tracked to show update date on GitHub Pages)
