@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/bs.css?v=20260225-commentary-images">
+    <link rel="stylesheet" href="css/bs.css?v=20260301-topic-page-indicator">
 </head>
 <body>
     <header id="mainHeader" class="header-expanded">
@@ -86,8 +86,9 @@
                 </select>
             </div>
             <div class="sutra-navigation-header" id="sutraNavigationHeader" style="display: none;">
-                <button class="nav-header-btn vyakhyana-nav-btn" id="prevVyakhyanaBtn" title="Previous Vyakhyana">&lt;&lt;</button>
+                <button class="nav-header-btn vyakhyana-nav-btn" id="prevVyakhyanaBtn" title="Previous Topic">&lt;&lt;</button>
                 <button class="nav-header-btn part-nav-btn" id="prevPartBtn" title="Previous Part">&lt;</button>
+                <span class="topic-page-indicator" id="topicPageIndicator">Topic#1, Page#1</span>
                 <button class="nav-header-btn part-nav-btn" id="nextPartBtn" title="Next Part">&gt;</button>
                 <button class="nav-header-btn vyakhyana-nav-btn" id="nextVyakhyanaBtn" title="Next Topic">&gt;&gt;</button>
             </div>
@@ -174,6 +175,6 @@
     <script src="transliterate-library/scripts/bengali-script.js"></script>
     
     <!-- Main application -->
-    <script src="js/bs.js?v=20260301-fix-topic-navigation-part-reset"></script>
+    <script src="js/bs.js?v=20260301-add-topic-page-display"></script>
 </body>
 </html>

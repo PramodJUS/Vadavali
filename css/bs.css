@@ -404,6 +404,20 @@ header.header-collapsed .header-toggle-btn {
     box-shadow: 0 8px 16px rgba(118, 75, 162, 0.5);
 }
 
+/* Topic and Page indicator */
+.topic-page-indicator {
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+
 .translation-status {
     display: inline-block;
     font-size: 0.85rem;

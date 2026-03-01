@@ -1749,6 +1749,16 @@ function updateNavigationButtons() {
         nextVyakhyanaBtn.disabled = isLastSutra;
         nextVyakhyanaBtn.style.opacity = isLastSutra ? '0.3' : '1';
     }
+
+    // Update topic and page indicator
+    const topicPageIndicator = document.getElementById('topicPageIndicator');
+    if (topicPageIndicator && currentTopic) {
+        const topicNumber = currentTopic.adhyaya ?
+                           `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` :
+                           currentTopic.id;
+        const pageNumber = currentPart.replace('Part#', '');
+        topicPageIndicator.textContent = `Topic#${topicNumber}, Page#${pageNumber}`;
+    }
 }
 
 // Update navigation button text based on language
@@ -2250,7 +2260,7 @@ function createTopicLink(sutra, index) {
     const adhikaranaText = sutra.adhikarana ? (currentLanguage !== 'sa' ? transliterateText(sutra.adhikarana, currentLanguage) : sutra.adhikarana) : '';
 
     // Use ID if adhyaya/pada don't exist (simple CSV structure)
-    const numberDisplay = sutra.adhyaya ? `${sutra.adhyaya}.${sutra.pada}.${sutra.sutra_number}` : sutra.id;
+    const numberDisplay = sutra.adhyaya ? `${sutra.adhyaya}.${sutra.pada}.${sutra.sutra_number}` : `Topic#${sutra.id}`;
 
     return `
         <a href="#" class="sutra-link" data-index="${index}">
