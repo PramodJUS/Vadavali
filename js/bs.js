@@ -2380,10 +2380,12 @@ function restoreInfoPanel() {
 // Show detailed view of a sutra
 function showTopicDetail(sutra, partKey = null) {
     // Check if we're switching to a different sutra
-    const isDifferentSutra = !currentTopic || 
-                             currentTopic.adhyaya !== sutra.adhyaya || 
-                             currentTopic.pada !== sutra.pada || 
-                             currentTopic.sutra_number !== sutra.sutra_number;
+    const isDifferentSutra = !currentTopic ||
+                             (sutra.adhyaya ?
+                                 (currentTopic.adhyaya !== sutra.adhyaya ||
+                                  currentTopic.pada !== sutra.pada ||
+                                  currentTopic.sutra_number !== sutra.sutra_number) :
+                                 (currentTopic.id !== sutra.id));
     
     // Clear open vyakhyanas only when switching to a different sutra
     if (isDifferentSutra) {
