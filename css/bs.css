@@ -931,6 +931,14 @@ header.header-collapsed .header-toggle-btn {
     line-height: 1.4;
 }
 
+.page-indicator {
+    display: inline;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fbbf24;
+    margin-left: 2px;
+}
+
 .sutra-link-text {
     grid-column: 2;
     grid-row: 1;

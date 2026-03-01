@@ -1750,7 +1750,7 @@ function updateNavigationButtons() {
         nextVyakhyanaBtn.style.opacity = isLastSutra ? '0.3' : '1';
     }
 
-    // Update topic and page indicator
+    // Update topic and page indicator in navigation header
     const topicPageIndicator = document.getElementById('topicPageIndicator');
     if (topicPageIndicator && currentTopic) {
         const topicNumber = currentTopic.adhyaya ?
@@ -1758,6 +1758,35 @@ function updateNavigationButtons() {
                            currentTopic.id;
         const pageNumber = currentPart.replace('Part#', '');
         topicPageIndicator.textContent = `Topic#${topicNumber}, Page#${pageNumber}`;
+    }
+
+    // Update page indicator in left pane topic list
+    updateLeftPanePageIndicator();
+}
+
+// Update the page indicator for the current topic in the left pane
+function updateLeftPanePageIndicator() {
+    // Hide all page indicators first
+    document.querySelectorAll('.page-indicator').forEach(indicator => {
+        indicator.style.display = 'none';
+        indicator.textContent = '';
+    });
+
+    // Show page indicator only for current topic
+    if (currentTopic) {
+        const topicId = currentTopic.adhyaya ?
+                       `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` :
+                       currentTopic.id;
+
+        const currentLink = document.querySelector(`.sutra-link[data-topic-id="${topicId}"]`);
+        if (currentLink) {
+            const pageIndicator = currentLink.querySelector('.page-indicator');
+            if (pageIndicator) {
+                const pageNumber = currentPart.replace('Part#', '');
+                pageIndicator.textContent = `, Page#${pageNumber}`;
+                pageIndicator.style.display = 'inline';
+            }
+        }
     }
 }
 
@@ -2261,11 +2290,12 @@ function createTopicLink(sutra, index) {
 
     // Use ID if adhyaya/pada don't exist (simple CSV structure)
     const numberDisplay = sutra.adhyaya ? `${sutra.adhyaya}.${sutra.pada}.${sutra.sutra_number}` : `Topic#${sutra.id}`;
+    const topicId = sutra.adhyaya ? `${sutra.adhyaya}.${sutra.pada}.${sutra.sutra_number}` : sutra.id;
 
     return `
-        <a href="#" class="sutra-link" data-index="${index}">
+        <a href="#" class="sutra-link" data-index="${index}" data-topic-id="${topicId}">
             <div class="sutra-link-number">
-                ${numberDisplay}
+                ${numberDisplay}<span class="page-indicator" style="display: none;"></span>
             </div>
             <div class="sutra-link-text">
                 ${sutraText}
