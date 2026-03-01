@@ -11,6 +11,7 @@ let isSpeaking = false;
 let currentLanguage = 'sa'; // Default language (Sanskrit)
 let currentTopic = null; // Track current topic indetail view
 let currentPart = 'Part#1'; // Track current part being displayed
+let lastViewedPages = {}; // Track last viewed page for each topic: {topicId: pageNumber}
 let selectedVyakhyanaKeys = new Set(); // Track selected vyakhyana KEY NAMES, not positions
 let selectAllVyakhyanas = true; // Track if "All" is selected (default: true)
 let openVyakhyanas = new Set(); // Track which vyakhyanas are currently open/expanded
@@ -1750,16 +1751,6 @@ function updateNavigationButtons() {
         nextVyakhyanaBtn.style.opacity = isLastSutra ? '0.3' : '1';
     }
 
-    // Update topic and page indicator in navigation header
-    const topicPageIndicator = document.getElementById('topicPageIndicator');
-    if (topicPageIndicator && currentTopic) {
-        const topicNumber = currentTopic.adhyaya ?
-                           `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` :
-                           currentTopic.id;
-        const pageNumber = currentPart.replace('Part#', '');
-        topicPageIndicator.textContent = `Topic#${topicNumber}, Page#${pageNumber}`;
-    }
-
     // Update page indicator in left pane topic list
     updateLeftPanePageIndicator();
 }
@@ -1772,22 +1763,26 @@ function updateLeftPanePageIndicator() {
         indicator.textContent = '';
     });
 
-    // Show page indicator only for current topic
+    // Save current page for current topic if viewing one
     if (currentTopic) {
         const topicId = currentTopic.adhyaya ?
                        `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` :
                        currentTopic.id;
+        const pageNumber = currentPart.replace('Part#', '');
+        lastViewedPages[topicId] = pageNumber;
+    }
 
-        const currentLink = document.querySelector(`.sutra-link[data-topic-id="${topicId}"]`);
-        if (currentLink) {
-            const pageIndicator = currentLink.querySelector('.page-indicator');
+    // Show page indicators for all topics that have been viewed
+    Object.keys(lastViewedPages).forEach(topicId => {
+        const link = document.querySelector(`.sutra-link[data-topic-id="${topicId}"]`);
+        if (link) {
+            const pageIndicator = link.querySelector('.page-indicator');
             if (pageIndicator) {
-                const pageNumber = currentPart.replace('Part#', '');
-                pageIndicator.textContent = `, Page#${pageNumber}`;
+                pageIndicator.textContent = `, Page#${lastViewedPages[topicId]}`;
                 pageIndicator.style.display = 'inline';
             }
         }
-    }
+    });
 }
 
 // Update navigation button text based on language
@@ -3469,11 +3464,15 @@ function searchInVyakhyanaWithPratika(vyakhyanaNum, vyakhyaKey, searchTerm, isPr
 // Show list view
 function showListView() {
     currentView = 'list';
+
+    // Update page indicators before clearing current topic
+    updateLeftPanePageIndicator();
+
     currentTopic = null; // Clear current topic
     openVyakhyanas.clear(); // Clear open vyakhyanas state when leaving detail view
     topicDetail.style.display = 'none';
     topicList.style.display = 'flex';
-    
+
     // Restore info panel to default
     restoreInfoPanel();
     
