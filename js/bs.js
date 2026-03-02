@@ -1473,9 +1473,12 @@ function navigateToPreviousPart() {
             });
 
             if (firstOpenedVyakhyana) {
-                firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Use requestAnimationFrame to ensure DOM is fully painted before scrolling
+                requestAnimationFrame(() => {
+                    firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
             }
-        }, 200);
+        }, 300);
     } else {
         // At first part, navigate to previous topic's last part
         if (filteredTopics.length === 0) return;
@@ -1597,9 +1600,12 @@ function navigateToNextPart() {
             });
 
             if (firstOpenedVyakhyana) {
-                firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Use requestAnimationFrame to ensure DOM is fully painted before scrolling
+                requestAnimationFrame(() => {
+                    firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
             }
-        }, 200);
+        }, 300);
     } else {
         // At last part, navigate to next topic's first part
         if (filteredTopics.length === 0) return;
