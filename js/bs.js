@@ -1342,19 +1342,10 @@ function navigateToPreviousVyakhyana() {
             openVyakhyanasArray.forEach(vyakhyanaKey => {
                 // Only try to open if this vyakhyana key exists in the new topic
                 if (vyakhyanaContainer[vyakhyanaKey]) {
-                    // Find the index of this vyakhyana in the new topic
-                    const vyakhyanaKeys = Object.keys(vyakhyanaContainer).filter(key => {
-                        const excludeKeys = ['meaning', 'meaningKn', 'meaningTe', 'meaningDetails', 'meaningDetailsKn', 'meaningDetailsTe', 
-                                             'commentary', 'commentaryKn', 'commentaryTe'];
-                        if (excludeKeys.includes(key)) return false;
-                        const value = vyakhyanaContainer[key];
-                        return value && typeof value === 'object' && 
-                               (value.hasOwnProperty('moola') || value.hasOwnProperty('Ka_Translation') || 
-                                value.hasOwnProperty('Te_Translation') || value.hasOwnProperty('En_Translation'));
-                    });
-                    const num = vyakhyanaKeys.indexOf(vyakhyanaKey) + 1;
-                    
-                    if (num > 0) {
+                    // Find the commentary by its data-key attribute (more reliable than calculating number)
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
                         const toggle = document.getElementById(`toggle-${num}`);
                         const content = document.getElementById(`commentary-${num}`);
                         if (toggle && content) {
@@ -1403,19 +1394,10 @@ function navigateToNextVyakhyana() {
             openVyakhyanasArray.forEach(vyakhyanaKey => {
                 // Only try to open if this vyakhyana key exists in the new topic
                 if (vyakhyanaContainer[vyakhyanaKey]) {
-                    // Find the index of this vyakhyana in the new topic
-                    const vyakhyanaKeys = Object.keys(vyakhyanaContainer).filter(key => {
-                        const excludeKeys = ['meaning', 'meaningKn', 'meaningTe', 'meaningDetails', 'meaningDetailsKn', 'meaningDetailsTe', 
-                                             'commentary', 'commentaryKn', 'commentaryTe'];
-                        if (excludeKeys.includes(key)) return false;
-                        const value = vyakhyanaContainer[key];
-                        return value && typeof value === 'object' && 
-                               (value.hasOwnProperty('moola') || value.hasOwnProperty('Ka_Translation') || 
-                                value.hasOwnProperty('Te_Translation') || value.hasOwnProperty('En_Translation'));
-                    });
-                    const num = vyakhyanaKeys.indexOf(vyakhyanaKey) + 1;
-                    
-                    if (num > 0) {
+                    // Find the commentary by its data-key attribute (more reliable than calculating number)
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
                         const toggle = document.getElementById(`toggle-${num}`);
                         const content = document.getElementById(`commentary-${num}`);
                         if (toggle && content) {
@@ -1459,9 +1441,41 @@ function navigateToPreviousPart() {
     const currentPartIndex = partKeys.indexOf(currentPart);
     
     if (currentPartIndex > 0) {
+        // Keep track of which vyakhyanas are currently open
+        const openVyakhyanasArray = Array.from(openVyakhyanas);
         const prevPart = partKeys[currentPartIndex - 1];
         console.log(`Navigating to ${prevPart}`);
         showTopicDetail(currentTopic, prevPart);
+
+        // After navigation, re-open the same vyakhyanas
+        setTimeout(() => {
+            const topicKey = currentTopic.adhyaya ? `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` : currentTopic.id;
+            const details = topicDetails[topicKey] || {};
+            const vyakhyanaContainer = details[currentPart] || details;
+
+            console.log('Re-opening commentaries after prev part navigation:', openVyakhyanasArray);
+            let firstOpenedVyakhyana = null;
+            openVyakhyanasArray.forEach(vyakhyanaKey => {
+                if (vyakhyanaContainer[vyakhyanaKey]) {
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
+                        const toggle = document.getElementById(`toggle-${num}`);
+                        const content = document.getElementById(`commentary-${num}`);
+                        if (toggle && content) {
+                            content.style.display = 'block';
+                            toggle.textContent = '▲';
+                            openVyakhyanas.add(vyakhyanaKey);
+                            if (!firstOpenedVyakhyana) firstOpenedVyakhyana = content;
+                        }
+                    }
+                }
+            });
+
+            if (firstOpenedVyakhyana) {
+                firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 200);
     } else {
         // At first part, navigate to previous topic's last part
         if (filteredTopics.length === 0) return;
@@ -1485,8 +1499,40 @@ function navigateToPreviousPart() {
             });
             
             const lastPart = prevPartKeys.length > 0 ? prevPartKeys[prevPartKeys.length - 1] : 'Part#1';
+            // Keep track of which vyakhyanas are currently open
+            const openVyakhyanasArray = Array.from(openVyakhyanas);
             console.log(`Navigating to previous topic's ${lastPart}`);
             showTopicDetail(previousTopic, lastPart);
+
+            // After navigation, re-open the same vyakhyanas
+            setTimeout(() => {
+                const topicKey = previousTopic.adhyaya ? `${previousTopic.adhyaya}.${previousTopic.pada}.${previousTopic.sutra_number}` : previousTopic.id;
+                const details = topicDetails[topicKey] || {};
+                const vyakhyanaContainer = details[currentPart] || details;
+
+                console.log('Re-opening commentaries after prev topic navigation (from < button):', openVyakhyanasArray);
+                let firstOpenedVyakhyana = null;
+                openVyakhyanasArray.forEach(vyakhyanaKey => {
+                    if (vyakhyanaContainer[vyakhyanaKey]) {
+                        const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                        if (commentaryItem) {
+                            const num = commentaryItem.getAttribute('data-vyakhyana-num');
+                            const toggle = document.getElementById(`toggle-${num}`);
+                            const content = document.getElementById(`commentary-${num}`);
+                            if (toggle && content) {
+                                content.style.display = 'block';
+                                toggle.textContent = '▲';
+                                openVyakhyanas.add(vyakhyanaKey);
+                                if (!firstOpenedVyakhyana) firstOpenedVyakhyana = content;
+                            }
+                        }
+                    }
+                });
+
+                if (firstOpenedVyakhyana) {
+                    firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 200);
         } else {
             console.log('Already at first topic and first part');
         }
@@ -1516,9 +1562,44 @@ function navigateToNextPart() {
     const currentPartIndex = partKeys.indexOf(currentPart);
     
     if (currentPartIndex >= 0 && currentPartIndex < partKeys.length - 1) {
+        // Keep track of which vyakhyanas are currently open
+        const openVyakhyanasArray = Array.from(openVyakhyanas);
         const nextPart = partKeys[currentPartIndex + 1];
         console.log(`Navigating to ${nextPart}`);
         showTopicDetail(currentTopic, nextPart);
+
+        // After navigation, re-open the same vyakhyanas
+        setTimeout(() => {
+            const topicKey = currentTopic.adhyaya ? `${currentTopic.adhyaya}.${currentTopic.pada}.${currentTopic.sutra_number}` : currentTopic.id;
+            const details = topicDetails[topicKey] || {};
+            const vyakhyanaContainer = details[currentPart] || details;
+
+            console.log('Re-opening commentaries after next part navigation:', openVyakhyanasArray);
+            let firstOpenedVyakhyana = null;
+            openVyakhyanasArray.forEach(vyakhyanaKey => {
+                console.log('Looking for vyakhyana:', vyakhyanaKey);
+                if (vyakhyanaContainer[vyakhyanaKey]) {
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    console.log('Found commentary item:', commentaryItem);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
+                        console.log('Commentary number:', num);
+                        const toggle = document.getElementById(`toggle-${num}`);
+                        const content = document.getElementById(`commentary-${num}`);
+                        if (toggle && content) {
+                            content.style.display = 'block';
+                            toggle.textContent = '▲';
+                            openVyakhyanas.add(vyakhyanaKey);
+                            if (!firstOpenedVyakhyana) firstOpenedVyakhyana = content;
+                        }
+                    }
+                }
+            });
+
+            if (firstOpenedVyakhyana) {
+                firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 200);
     } else {
         // At last part, navigate to next topic's first part
         if (filteredTopics.length === 0) return;
@@ -1530,9 +1611,44 @@ function navigateToNextPart() {
         );
         
         if (currentIndex >= 0 && currentIndex < filteredTopics.length - 1) {
+            // Keep track of which vyakhyanas are currently open
+            const openVyakhyanasArray = Array.from(openVyakhyanas);
             const nextTopic = filteredTopics[currentIndex + 1];
             console.log('Navigating to next topic\'s Part#1');
             showTopicDetail(nextTopic, 'Part#1');
+
+            // After navigation, re-open the same vyakhyanas
+            setTimeout(() => {
+                const topicKey = nextTopic.adhyaya ? `${nextTopic.adhyaya}.${nextTopic.pada}.${nextTopic.sutra_number}` : nextTopic.id;
+                const details = topicDetails[topicKey] || {};
+                const vyakhyanaContainer = details[currentPart] || details;
+
+                console.log('Re-opening commentaries after next topic navigation (from > button):', openVyakhyanasArray);
+                let firstOpenedVyakhyana = null;
+                openVyakhyanasArray.forEach(vyakhyanaKey => {
+                    console.log('Looking for vyakhyana:', vyakhyanaKey);
+                    if (vyakhyanaContainer[vyakhyanaKey]) {
+                        const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                        console.log('Found commentary item:', commentaryItem);
+                        if (commentaryItem) {
+                            const num = commentaryItem.getAttribute('data-vyakhyana-num');
+                            console.log('Commentary number:', num);
+                            const toggle = document.getElementById(`toggle-${num}`);
+                            const content = document.getElementById(`commentary-${num}`);
+                            if (toggle && content) {
+                                content.style.display = 'block';
+                                toggle.textContent = '▲';
+                                openVyakhyanas.add(vyakhyanaKey);
+                                if (!firstOpenedVyakhyana) firstOpenedVyakhyana = content;
+                            }
+                        }
+                    }
+                });
+
+                if (firstOpenedVyakhyana) {
+                    firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 200);
         } else {
             console.log('Already at last topic and last part');
         }
@@ -1567,19 +1683,10 @@ function navigateToPrevious() {
             openVyakhyanasArray.forEach(vyakhyanaKey => {
                 // Only try to open if this vyakhyana key exists in the new topic
                 if (vyakhyanaContainer[vyakhyanaKey]) {
-                    // Find the index of this vyakhyana in the new topic
-                    const vyakhyanaKeys = Object.keys(vyakhyanaContainer).filter(key => {
-                        const excludeKeys = ['meaning', 'meaningKn', 'meaningTe', 'meaningDetails', 'meaningDetailsKn', 'meaningDetailsTe', 
-                                             'commentary', 'commentaryKn', 'commentaryTe'];
-                        if (excludeKeys.includes(key)) return false;
-                        const value = vyakhyanaContainer[key];
-                        return value && typeof value === 'object' && 
-                               (value.hasOwnProperty('moola') || value.hasOwnProperty('Ka_Translation') || 
-                                value.hasOwnProperty('Te_Translation') || value.hasOwnProperty('En_Translation'));
-                    });
-                    const num = vyakhyanaKeys.indexOf(vyakhyanaKey) + 1;
-                    
-                    if (num > 0) {
+                    // Find the commentary by its data-key attribute (more reliable than calculating number)
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
                         const toggle = document.getElementById(`toggle-${num}`);
                         const content = document.getElementById(`commentary-${num}`);
                         if (toggle && content) {
@@ -1628,19 +1735,10 @@ function navigateToNext() {
             openVyakhyanasArray.forEach(vyakhyanaKey => {
                 // Only try to open if this vyakhyana key exists in the new topic
                 if (vyakhyanaContainer[vyakhyanaKey]) {
-                    // Find the index of this vyakhyana in the new topic
-                    const vyakhyanaKeys = Object.keys(vyakhyanaContainer).filter(key => {
-                        const excludeKeys = ['meaning', 'meaningKn', 'meaningTe', 'meaningDetails', 'meaningDetailsKn', 'meaningDetailsTe', 
-                                             'commentary', 'commentaryKn', 'commentaryTe'];
-                        if (excludeKeys.includes(key)) return false;
-                        const value = vyakhyanaContainer[key];
-                        return value && typeof value === 'object' && 
-                               (value.hasOwnProperty('moola') || value.hasOwnProperty('Ka_Translation') || 
-                                value.hasOwnProperty('Te_Translation') || value.hasOwnProperty('En_Translation'));
-                    });
-                    const num = vyakhyanaKeys.indexOf(vyakhyanaKey) + 1;
-                    
-                    if (num > 0) {
+                    // Find the commentary by its data-key attribute (more reliable than calculating number)
+                    const commentaryItem = document.querySelector(`.commentary-item[data-key="${vyakhyanaKey}"]`);
+                    if (commentaryItem) {
+                        const num = commentaryItem.getAttribute('data-vyakhyana-num');
                         const toggle = document.getElementById(`toggle-${num}`);
                         const content = document.getElementById(`commentary-${num}`);
                         if (toggle && content) {
@@ -2325,10 +2423,24 @@ function updateInfoPanelForTopic(sutra) {
     
     const backToMainText = lang.backToHome || baseLang.backToHome;
     const adhikaranaInfoText = getTranslatedText('अधिकरणविषयः', currentLanguage);
-    
+
+    // Calculate page numbers for the topic
+    const details = topicDetails[topicKey] || {};
+    const partKeys = Object.keys(details).filter(key => key.startsWith('Part#')).sort((a, b) => {
+        const numA = parseInt(a.replace('Part#', ''));
+        const numB = parseInt(b.replace('Part#', ''));
+        return numA - numB;
+    });
+    const totalPages = partKeys.length > 0 ? partKeys.length : 1;
+    const currentPageNum = currentPart ? parseInt(currentPart.replace('Part#', '')) : 1;
+    const pageIndicator = `(Page#${currentPageNum}/${totalPages})`;
+
+    // Format topic display with Topic# prefix
+    const topicDisplay = sutra.adhyaya ? topicKey : `Topic#${topicKey}`;
+
     infoPanelContent.innerHTML = `
         <div class="sutra-info-panel">
-            <div class="sutra-info-number">${topicKey}</div>
+            <div class="sutra-info-number">${topicDisplay} ${pageIndicator}</div>
             <div class="sutra-info-text">${sutraText}</div>
             <div style="margin: 15px 0;">
                 <span class="vishaya-info-link" id="vishayaInfoLink">
