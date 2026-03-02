@@ -135,10 +135,52 @@ vyakhyanaPagination[paginationKey] = currentPage;
 ```
 
 ### State Preservation
+
 The app preserves UI state across navigation:
 - `openVyakhyanas` (Set) - which commentaries are expanded
 - `selectedVyakhyanaKeys` (Set) - which commentaries are visible (from dropdown)
 - `vyakhyanaPagination` (Object) - current page for each commentary
+- `lastViewedPages` (Object) - tracks last viewed page/part for each topic
+
+#### Page Count Indicator
+
+The info panel displays a page count indicator showing current page and total pages:
+- **Format:** `Topic#X (Page#Y/Z)` or `A.B.C (Page#Y/Z)`
+- **Location:** Info panel `.sutra-info-number` element (js/bs.js ~2331)
+- **Calculation:** Counts `Part#N` keys in topic data, current from `currentPart` global
+- **Updates:** Dynamically when navigating between parts
+
+Example display:
+- `Topic#1 (Page#1/1)` - Single page topic
+- `Topic#2 (Page#2/3)` - Second page of three-page topic
+
+#### Commentary Persistence Across Navigation
+
+When navigating with `<<`, `<`, `>`, or `>>` buttons, the app automatically:
+
+1. **Saves** which commentaries are currently open (by key name in `openVyakhyanas` Set)
+2. **Navigates** to the new topic/part via `showTopicDetail()`
+3. **Waits** 300ms for DOM to render
+4. **Finds** each previously opened commentary by `data-key` attribute
+5. **Opens** matching commentaries by reading `data-vyakhyana-num` and toggling display
+6. **Scrolls** smoothly to first opened commentary using `requestAnimationFrame` + `scrollIntoView()`
+
+**Implementation Details:**
+- Uses DOM queries: `.commentary-item[data-key="${vyakhyanaKey}"]`
+- Avoids calculating commentary numbers - reads from rendered DOM attributes
+- Handles missing commentaries gracefully (e.g., भावदीपा in one topic but not another)
+- Works across all navigation scenarios:
+  - `<<` / `>>` - Previous/next topic
+  - `<` / `>` - Previous/next part within topic
+  - Edge cases: Jumping from last part to next topic's first part
+
+**Scroll Behavior:**
+```javascript
+requestAnimationFrame(() => {
+    firstOpenedVyakhyana.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+```
+Uses `requestAnimationFrame` to ensure DOM is painted before scrolling.
 
 ### Adding New Commentary
 
@@ -177,6 +219,14 @@ All UI text is stored in `js/bs.js` in the `translations` object (lines ~280-450
 - `footer` - Footer text
 
 **All 8 languages have been verified** to correctly reference "Vadavali by Jayatirtha" (not "Brahma Sutras by Madhvacharya").
+
+### Info Panel Styling
+
+The info panel displays topic information with specific font sizes:
+- **`.sutra-info-number`** (css/bs.css ~728): `1.2rem` - Topic number and page indicator
+- **`.sutra-info-text`** (css/bs.css ~777): `1.6rem` - Main sutra text (larger for readability)
+
+This creates a visual hierarchy where the sutra text is prominent and metadata is compact.
 
 ### Null Checks for Removed Elements
 
