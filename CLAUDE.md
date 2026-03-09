@@ -32,6 +32,33 @@ The application uses a **simple JSON structure** for storing commentary text:
 - `Grantha/Author.csv` - Commentary metadata (Commentry_Name, Author_Name, Image_Name)
 - `Grantha/vishaya-details.json` - Topic details and adhikaranas
 
+### Data Import & Web Scraping
+
+The `dataimport/` folder contains tools for scraping Sanskrit texts from dvaitavedanta.in:
+
+**Documentation:**
+- `dataimport/SCRAPING_RULES.md` - **Comprehensive rules** for scraping Sanskrit texts (extraction rules, cleanup rules, quality checks)
+- `dataimport/SCRAPING_CHECKLIST.md` - **Quick reference** checklist for scraping new granthas
+- `dataimport/README.md` - Usage instructions for the scraping tools
+
+**Key scraping rules (see SCRAPING_RULES.md for complete details):**
+- Extract ONLY text between specific headings (H2 for main text, H3 for commentaries)
+- Exclude all author attribution lines (containing कृता, विरचित, etc.)
+- Normalize dandas: `।।` → `॥`
+- Single newlines only (no `\n\n`)
+- No trailing whitespace
+- Handle multi-part topics via JavaScript lazy loading
+
+**Tools:**
+- `scrape_selenium_v2.py` - Production scraper using click-and-wait strategy (100% success rate)
+- `cleanup_whitespace.py` - Clean up newlines and trailing spaces
+- `replace_dandas.py` - Normalize Devanagari dandas
+- `api_scraper_template.py` - Template for API-based scraping (future use)
+
+**Key Innovation:** The scraper uses a **click-and-wait strategy** to handle JavaScript-loaded content. It clicks `callArticle()` onclick handlers and waits explicitly for each article to load, ensuring 100% capture rate.
+
+These tools and rules can be adapted for scraping other granthas from dvaitavedanta.in. See `dataimport/SCRAPING_COMPARISON.md` for detailed comparison of scraping approaches (API vs Selenium).
+
 ### Commentary System
 
 The application now includes **8 commentaries total**:

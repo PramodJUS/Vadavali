@@ -1,5 +1,30 @@
 # Release Notes - Vadavali
 
+## Version 1.0.2 - March 9, 2026
+
+### Data Completeness
+- **100% Complete Content**: All 47 topics now have complete data with no missing articles.
+- **Fixed Missing Articles**: Captured previously missing articles (9065, 9076, 9080) that were loading via JavaScript.
+- **New Scraping Strategy**: Implemented click-and-wait strategy for JavaScript-loaded content with 100% success rate.
+
+### Data Quality Improvements
+- **Danda Normalization**: Normalized 7,818 occurrences of improper dandas (`।।` → `॥`).
+- **Whitespace Cleanup**: Removed all double newlines and trailing spaces for consistent formatting.
+- **File Size**: Increased from 2.6M to 3.8M (+46% more complete content).
+
+### Documentation Updates
+- **Updated scraping documentation** with proven working approach (click-and-wait strategy).
+- **Added comprehensive comparison** of API vs Selenium scraping approaches.
+- **Cleaned up repository**: Removed 62+ duplicate, test, and temporary files (~9M).
+
+### Technical Details
+- Topic 4: Now has 5 complete parts (was 4)
+- Topic 6: Now has 9 complete parts (was 8)
+- Topic 7: Now has 4 complete parts (was 3)
+- All text properly formatted with single newlines and correct Unicode characters
+
+---
+
 ## Version 1.0.1 - February 25, 2026
 
 ### Bug Fixes
